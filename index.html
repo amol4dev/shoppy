@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shoppy — Shop the Streets of India, Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header" id="siteHeader">
+  <div class="header-top">
+    <div class="wrap header-top-inner">
+      <p>Free delivery across India on orders above ₹499</p>
+      <p class="header-top-right">Track Order · Help Center</p>
+    </div>
+  </div>
+  <div class="wrap header-main">
+    <a href="#" class="logo">Shoppy<span class="logo-dot">.</span></a>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search for kurtas, earbuds, cookware...">
+      <button aria-label="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="header-actions">
+      <button class="icon-btn" id="wishlistBtn" aria-label="Wishlist">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 6 4c2.2-.3 3.9 1 6 3 2.1-2 3.8-3.3 6-3 4 .5 5.6 4.2 4 7.7C19.5 16.4 12 21 12 21z" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span class="badge" id="wishlistCount">0</span>
+      </button>
+      <button class="icon-btn" id="cartBtn" aria-label="Cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.4a2 2 0 002 1.6h8.4a2 2 0 002-1.6L21 8H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="18" cy="21" r="1.4" fill="currentColor"/></svg>
+        <span class="badge" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="wrap category-nav" id="categoryNav">
+    <!-- filled by JS -->
+  </nav>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow">Bazaar-fresh · New drops daily</p>
+      <h1>Everything you<br>didn't know you<br>needed, at <span>desi</span> prices.</h1>
+      <p class="hero-sub">From street-style fashion to smart gadgets — Shoppy brings the full chaos and charm of the Indian bazaar to your screen.</p>
+      <div class="hero-cta">
+        <a href="#shop" class="btn btn-primary">Start Shopping</a>
+        <a href="#deal" class="btn btn-ghost">Today's Deal →</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="tag-float tag1">₹399</div>
+      <div class="tag-float tag2">50% OFF</div>
+      <div class="tag-float tag3">★ 4.8</div>
+      <div class="hero-blob">🛍️</div>
+    </div>
+  </div>
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>FASHION ✦ ELECTRONICS ✦ HOME &amp; LIVING ✦ BEAUTY ✦ SPORTS ✦ BOOKS ✦ FASHION ✦ ELECTRONICS ✦ HOME &amp; LIVING ✦ BEAUTY ✦ SPORTS ✦ BOOKS ✦</span>
+      <span>FASHION ✦ ELECTRONICS ✦ HOME &amp; LIVING ✦ BEAUTY ✦ SPORTS ✦ BOOKS ✦ FASHION ✦ ELECTRONICS ✦ HOME &amp; LIVING ✦ BEAUTY ✦ SPORTS ✦ BOOKS ✦</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TODAY'S DEAL ============ -->
+<section class="deal" id="deal">
+  <div class="wrap deal-inner">
+    <div class="deal-copy">
+      <p class="eyebrow eyebrow-light">Lightning Deal</p>
+      <h2>The Monsoon Mega Sale ends in</h2>
+      <div class="countdown" id="countdown">
+        <div class="countdown-unit"><span id="cdHours">06</span><small>hrs</small></div>
+        <div class="countdown-unit"><span id="cdMins">00</span><small>min</small></div>
+        <div class="countdown-unit"><span id="cdSecs">00</span><small>sec</small></div>
+      </div>
+      <a href="#shop" class="btn btn-primary">Grab the Deal</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOP / PRODUCTS ============ -->
+<section class="shop" id="shop">
+  <div class="wrap">
+    <div class="shop-heading">
+      <h2>Trending right now</h2>
+      <p id="resultCount">Showing all products</p>
+    </div>
+    <div class="product-grid" id="productGrid">
+      <!-- filled by JS -->
+    </div>
+    <p class="empty-state" id="emptyState" hidden>No products match your search. Try a different keyword or category.</p>
+  </div>
+</section>
+
+<!-- ============ FEATURES STRIP ============ -->
+<section class="features">
+  <div class="wrap features-grid">
+    <div class="feature">
+      <span class="feature-icon">🚚</span>
+      <h3>Fast delivery</h3>
+      <p>Doorstep in 24–48 hrs across 19,000+ pin codes.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">↩️</span>
+      <h3>7-day returns</h3>
+      <p>Changed your mind? No questions asked.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">🔒</span>
+      <h3>Secure payments</h3>
+      <p>UPI, cards &amp; COD — always encrypted.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-icon">🏷️</span>
+      <h3>Best price tag</h3>
+      <p>We price-match every bazaar in town.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="testimonials">
+  <div class="wrap">
+    <h2>Loved across the country</h2>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <p>"Ordered a kurta set for a wedding, arrived a day early. Fit was perfect!"</p>
+        <span>— Ananya, Pune</span>
+      </div>
+      <div class="testimonial-card">
+        <p>"Shoppy's prices are unreal. Got my earbuds for way less than the mall."</p>
+        <span>— Rohit, Lucknow</span>
+      </div>
+      <div class="testimonial-card">
+        <p>"The return process took two minutes. Actually stress-free shopping."</p>
+        <span>— Meera, Kochi</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEWSLETTER ============ -->
+<section class="newsletter">
+  <div class="wrap newsletter-inner">
+    <div>
+      <h2>Get first dibs on new drops</h2>
+      <p>Sales, restocks and secret coupon codes — straight to your inbox.</p>
+    </div>
+    <form id="newsletterForm">
+      <input type="email" required placeholder="you@email.com">
+      <button type="submit" class="btn btn-primary">Notify me</button>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <p class="logo">Shoppy<span class="logo-dot">.</span></p>
+      <p>India's most fun way to shop online. Built with ❤️ and lots of chai.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <ul><li>Fashion</li><li>Electronics</li><li>Home &amp; Living</li><li>Beauty</li></ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul><li>About Shoppy</li><li>Careers</li><li>Press</li><li>Contact</li></ul>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <ul><li>Track Order</li><li>Returns</li><li>Shipping Info</li><li>FAQs</li></ul>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <p>© 2026 Shoppy Retail Pvt. Ltd. This is a demo project for portfolio purposes.</p>
+  </div>
+</footer>
+
+<!-- ============ CART DRAWER ============ -->
+<div class="overlay" id="overlay"></div>
+<aside class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button id="closeCart" aria-label="Close cart">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <!-- filled by JS -->
+  </div>
+  <div class="cart-footer">
+    <div class="cart-row"><span>Subtotal</span><span id="cartSubtotal">₹0</span></div>
+    <div class="cart-row"><span>Delivery</span><span id="cartDelivery">₹0</span></div>
+    <div class="cart-row cart-total"><span>Total</span><span id="cartTotal">₹0</span></div>
+    <button class="btn btn-primary btn-block" id="checkoutBtn">Checkout</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shoppy — Payment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:linear-gradient(135deg,#f6f4fb 0%,#ffffff 100%); }
+    .payment-page{ width:min(860px, 100%); background:#fff; border:1px solid rgba(27,27,47,0.10); border-radius:24px; box-shadow:0 20px 40px -12px rgba(27,27,47,0.18); overflow:hidden; }
+    .payment-header{ padding:24px 28px; border-bottom:1px solid rgba(27,27,47,0.10); background:linear-gradient(90deg, #fff 0%, #f9f7fd 100%); }
+    .payment-header-top{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    .home-link{ display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:999px; border:1px solid rgba(27,27,47,0.10); background:#fff; font-weight:600; color:var(--ink); }
+    .home-link:hover{ border-color:var(--ink); }
+    .payment-body{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:24px; padding:24px 28px 28px; }
+    .summary-card, .form-card{ background:var(--paper); border:1px solid rgba(27,27,47,0.10); border-radius:18px; padding:18px; }
+    .summary-card h3, .form-card h3{ margin-bottom:12px; font-size:1.1rem; }
+    .summary-item{ display:flex; justify-content:space-between; gap:10px; margin:8px 0; color:var(--ink-soft); font-size:0.95rem; }
+    .summary-total{ margin-top:12px; padding-top:12px; border-top:1px solid rgba(27,27,47,0.10); font-weight:700; }
+    .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+    .field span{ font-size:0.78rem; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em; }
+    .field input, .field textarea{ border:1px solid rgba(27,27,47,0.10); border-radius:10px; padding:10px 12px; font-size:0.95rem; }
+    .field input:focus, .field textarea:focus{ outline:2.5px solid var(--teal); border-color:transparent; }
+    .payment-options{ display:flex; flex-direction:column; gap:8px; margin:10px 0 12px; }
+    .payment-option{ display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid rgba(27,27,47,0.10); border-radius:10px; background:#fff; }
+    .actions{ display:flex; gap:10px; margin-top:14px; }
+    .actions .btn{ flex:1; }
+    @media (max-width:760px){ .payment-body{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="payment-page">
+    <div class="payment-header">
+      <div class="payment-header-top">
+        <a href="index.html" class="logo">Shoppy<span class="logo-dot">.</span></a>
+        <a href="index.html" class="home-link">← Home</a>
+      </div>
+      <h2>Complete your payment</h2>
+      <p>Enter your delivery info and choose how you want to pay.</p>
+    </div>
+
+    <div class="payment-body">
+      <div class="summary-card">
+        <h3>Order Summary</h3>
+        <div id="summaryItems"></div>
+        <div class="summary-item"><span>Subtotal</span><strong id="summarySubtotal">₹0</strong></div>
+        <div class="summary-item"><span>Delivery</span><strong id="summaryDelivery">₹0</strong></div>
+        <div class="summary-item summary-total"><span>Total</span><strong id="summaryTotal">₹0</strong></div>
+      </div>
+
+      <div class="form-card">
+        <h3>Delivery & Payment</h3>
+        <label class="field">
+          <span>Delivery Address</span>
+          <textarea id="deliveryAddress" rows="3" placeholder="Enter your full delivery address" required></textarea>
+        </label>
+
+        <div class="field">
+          <span>Phone Number</span>
+          <input id="phoneNumber" type="tel" placeholder="9876543210" required>
+        </div>
+
+        <div class="field">
+          <span>Email Address</span>
+          <input id="emailAddress" type="email" placeholder="you@example.com" required>
+        </div>
+
+        <div class="payment-options">
+          <span style="font-size:0.78rem; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em;">Payment Method</span>
+          <label class="payment-option"><input type="radio" name="paymentMethod" value="cod" checked> Cash on Delivery</label>
+          <label class="payment-option"><input type="radio" name="paymentMethod" value="upi"> UPI</label>
+          <label class="payment-option"><input type="radio" name="paymentMethod" value="card"> Card</label>
+        </div>
+
+        <div id="paymentDetails">
+          <p class="payment-hint">Pay with cash when your order arrives.</p>
+        </div>
+
+        <div class="actions">
+          <a href="index.html" class="btn btn-ghost">Back</a>
+          <button class="btn btn-primary" id="placeOrderBtn" type="button">Place Order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const summaryItems = document.getElementById('summaryItems');
+    const summarySubtotal = document.getElementById('summarySubtotal');
+    const summaryDelivery = document.getElementById('summaryDelivery');
+    const summaryTotal = document.getElementById('summaryTotal');
+    const paymentDetails = document.getElementById('paymentDetails');
+
+    function money(value) {
+      return '₹' + value.toLocaleString('en-IN');
+    }
+
+    const summary = JSON.parse(localStorage.getItem('shoppy_checkout_summary') || '{}');
+    if (summary.items && summary.items.length) {
+      summaryItems.innerHTML = summary.items.map(item => `
+        <div class="summary-item">
+          <span>${item.name} × ${item.qty}</span>
+          <strong>${money(item.price * item.qty)}</strong>
+        </div>
+      `).join('');
+      summarySubtotal.textContent = money(summary.subtotal || 0);
+      summaryDelivery.textContent = summary.delivery === 0 ? 'Free' : money(summary.delivery || 0);
+      summaryTotal.textContent = money(summary.total || 0);
+    } else {
+      summaryItems.innerHTML = '<p>No items found.</p>';
+    }
+
+    function renderPaymentDetails(){
+      const selected = document.querySelector('input[name="paymentMethod"]:checked')?.value || 'cod';
+      if (selected === 'upi') {
+        paymentDetails.innerHTML = `
+          <div class="field">
+            <span>UPI ID</span>
+            <input id="upiId" type="text" placeholder="yourname@upi" required>
+          </div>
+        `;
+      } else if (selected === 'card') {
+        paymentDetails.innerHTML = `
+          <div class="field">
+            <span>Card Number</span>
+            <input id="cardNumber" type="text" placeholder="1234 5678 9012 3456" required>
+          </div>
+          <div class="field">
+            <span>Name on Card</span>
+            <input id="cardName" type="text" placeholder="Aarav Sharma" required>
+          </div>
+          <div class="field">
+            <span>Expiry</span>
+            <input id="cardExpiry" type="text" placeholder="MM/YY" required>
+          </div>
+        `;
+      } else {
+        paymentDetails.innerHTML = '<p class="payment-hint">Pay with cash when your order arrives.</p>';
+      }
+    }
+
+    document.querySelectorAll('input[name="paymentMethod"]').forEach(r => r.addEventListener('change', renderPaymentDetails));
+    renderPaymentDetails();
+
+    document.getElementById('placeOrderBtn').addEventListener('click', () => {
+      const address = document.getElementById('deliveryAddress').value.trim();
+      const phone = document.getElementById('phoneNumber').value.trim();
+      const email = document.getElementById('emailAddress').value.trim();
+
+      if (!address || !phone || !email) {
+        alert('Please complete your delivery details.');
+        return;
+      }
+      if (!/^\d{10}$/.test(phone)) {
+        alert('Enter a valid 10-digit phone number.');
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Enter a valid email address.');
+        return;
+      }
+
+      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value || 'cod';
+      if (paymentMethod === 'upi') {
+        const upiId = document.getElementById('upiId')?.value.trim();
+        if (!upiId) {
+          alert('Please enter your UPI ID.');
+          return;
+        }
+      }
+      if (paymentMethod === 'card') {
+        const cardNumber = document.getElementById('cardNumber')?.value.trim();
+        const cardName = document.getElementById('cardName')?.value.trim();
+        const cardExpiry = document.getElementById('cardExpiry')?.value.trim();
+        if (!cardNumber || !cardName || !cardExpiry) {
+          alert('Please complete your card details.');
+          return;
+        }
+      }
+
+      localStorage.removeItem('shoppy_checkout_summary');
+      alert('Order placed successfully!');
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

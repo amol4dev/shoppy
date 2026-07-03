@@ -141,6 +141,12 @@ const cartItemsEl = document.getElementById("cartItems");
 const cartSubtotal = document.getElementById("cartSubtotal");
 const cartDelivery = document.getElementById("cartDelivery");
 const cartTotal = document.getElementById("cartTotal");
+const checkoutForm = document.getElementById("checkoutForm");
+const deliveryAddress = document.getElementById("deliveryAddress");
+const phoneNumber = document.getElementById("phoneNumber");
+const emailAddress = document.getElementById("emailAddress");
+const paymentDetails = document.getElementById("paymentDetails");
+const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
 
 function addToCart(id, btn){
   cart[id] = (cart[id] || 0) + 1;
@@ -231,16 +237,120 @@ document.getElementById("cartBtn").addEventListener("click", openCart);
 document.getElementById("closeCart").addEventListener("click", closeCartFn);
 overlay.addEventListener("click", closeCartFn);
 
+function renderPaymentDetails(){
+  const selected = document.querySelector('input[name="paymentMethod"]:checked')?.value || "cod";
+
+  if (selected === "upi"){
+    paymentDetails.innerHTML = `
+      <p class="payment-hint">Please share your UPI ID for a quick and secure payment.</p>
+      <label class="field">
+        <span>UPI ID</span>
+        <input id="upiId" type="text" placeholder="yourname@upi" required>
+      </label>
+    `;
+  } else if (selected === "card"){
+    paymentDetails.innerHTML = `
+      <p class="payment-hint">Your card details are secured for this demo checkout.</p>
+      <label class="field">
+        <span>Card Number</span>
+        <input id="cardNumber" type="text" placeholder="1234 5678 9012 3456" required>
+      </label>
+      <div class="field-grid">
+        <label class="field">
+          <span>Name on Card</span>
+          <input id="cardName" type="text" placeholder="Aarav Sharma" required>
+        </label>
+        <label class="field">
+          <span>Expiry</span>
+          <input id="cardExpiry" type="text" placeholder="MM/YY" required>
+        </label>
+      </div>
+    `;
+  } else {
+    paymentDetails.innerHTML = `<p class="payment-hint">Pay with cash when your order arrives.</p>`;
+  }
+}
+
+function validateCheckout(){
+  if (Object.keys(cart).length === 0){
+    showToast("Your cart is empty!");
+    return null;
+  }
+
+  const address = deliveryAddress.value.trim();
+  const phone = phoneNumber.value.trim();
+  const email = emailAddress.value.trim();
+
+  if (!address || !phone || !email){
+    showToast("Please complete your delivery details.");
+    return null;
+  }
+
+  if (!/^\d{10}$/.test(phone)){
+    showToast("Enter a valid 10-digit phone number.");
+    return null;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    showToast("Enter a valid email address.");
+    return null;
+  }
+
+  const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value || "cod";
+
+  if (paymentMethod === "upi"){
+    const upiId = document.getElementById("upiId")?.value.trim();
+    if (!upiId){
+      showToast("Please enter your UPI ID.");
+      return null;
+    }
+  }
+
+  if (paymentMethod === "card"){
+    const cardNumber = document.getElementById("cardNumber")?.value.trim();
+    const cardName = document.getElementById("cardName")?.value.trim();
+    const cardExpiry = document.getElementById("cardExpiry")?.value.trim();
+
+    if (!cardNumber || !cardName || !cardExpiry){
+      showToast("Please complete your card details.");
+      return null;
+    }
+  }
+
+  return { address, phone, email, paymentMethod };
+}
+
+paymentRadios.forEach(radio => radio.addEventListener("change", renderPaymentDetails));
+renderPaymentDetails();
+
 document.getElementById("checkoutBtn").addEventListener("click", () => {
   if (Object.keys(cart).length === 0){
     showToast("Your cart is empty!");
     return;
   }
-  showToast("Order placed! This is a demo checkout 🎉");
-  cart = {};
-  saveState();
-  updateCartUI();
-  setTimeout(closeCartFn, 900);
+
+  const orderItems = Object.entries(cart).map(([id, qty]) => {
+    const product = PRODUCTS.find(item => item.id === Number(id));
+    return {
+      id: Number(id),
+      name: product?.name || "Product",
+      qty,
+      price: product?.price || 0
+    };
+  });
+
+  const subtotal = orderItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const delivery = subtotal >= 499 || subtotal === 0 ? 0 : 49;
+  const total = subtotal + delivery;
+
+  localStorage.setItem("shoppy_checkout_summary", JSON.stringify({
+    items: orderItems,
+    subtotal,
+    delivery,
+    total
+  }));
+
+  window.location.href = "payment.html";
 });
 
 /* ============================================

@@ -671,6 +671,77 @@ h1,h2,h3,h4{font-family:var(--font-display); font-weight:600; letter-spacing:-0.
 }
 
 /* ============================================
+   CHECKOUT FORM
+   ============================================ */
+.checkout-panel{
+  border:1px solid var(--line);
+  border-radius:var(--radius-md);
+  padding:14px;
+  background:var(--paper);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-bottom:14px;
+}
+.checkout-panel h4{
+  font-size:0.95rem;
+  margin-bottom:2px;
+}
+.field{ display:flex; flex-direction:column; gap:6px; }
+.field span{
+  font-size:0.78rem;
+  font-weight:700;
+  color:var(--ink-soft);
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+}
+.field input,
+.field textarea{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:0.9rem;
+  background:#fff;
+}
+.field input:focus,
+.field textarea:focus{
+  outline:2.5px solid var(--teal);
+  border-color:transparent;
+}
+.field-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.payment-methods{ display:flex; flex-direction:column; gap:8px; }
+.payment-methods > span{
+  font-size:0.78rem;
+  font-weight:700;
+  color:var(--ink-soft);
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+}
+.payment-option{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 10px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#fff;
+  font-size:0.9rem;
+}
+.payment-option input{ accent-color:var(--teal); }
+.payment-details{
+  padding:10px 12px;
+  border-radius:10px;
+  background:#fff;
+  border:1px dashed var(--line);
+}
+.payment-hint{ font-size:0.84rem; color:var(--ink-soft); }
+.payment-details .field{ margin-top:8px; }
+
+/* ============================================
    TOAST
    ============================================ */
 .toast{

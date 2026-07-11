@@ -149,7 +149,33 @@ h1,h2,h3,h4{font-family:var(--font-display); font-weight:600; letter-spacing:-0.
   flex-shrink:0;
 }
 
-.header-actions{ display:flex; gap:10px; }
+.header-actions{ display:flex; gap:10px; align-items:center; }
+.login-menu{ position:relative; }
+.login-trigger{ border:1.5px solid var(--line); background:#fff; }
+.login-dropdown{
+  position:absolute;
+  top:calc(100% + 10px);
+  right:0;
+  display:none;
+  flex-direction:column;
+  min-width:180px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  box-shadow:var(--shadow-card);
+  overflow:hidden;
+  z-index:120;
+}
+.login-menu:hover .login-dropdown,
+.login-menu:focus-within .login-dropdown,
+.login-dropdown.show{ display:flex; }
+.login-option{
+  padding:12px 14px;
+  font-size:0.9rem;
+  color:var(--ink);
+  transition:background 0.15s ease;
+}
+.login-option:hover{ background:var(--paper); }
 .icon-btn{
   position:relative;
   width:42px;

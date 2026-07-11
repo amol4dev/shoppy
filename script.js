@@ -419,6 +419,19 @@ document.getElementById("newsletterForm").addEventListener("submit", e => {
   e.target.reset();
 });
 
+const loginTrigger = document.getElementById("loginTrigger");
+const loginDropdown = document.getElementById("loginDropdown");
+if (loginTrigger && loginDropdown) {
+  loginTrigger.addEventListener("click", event => {
+    event.stopPropagation();
+    loginDropdown.classList.toggle("show");
+  });
+
+  document.addEventListener("click", () => {
+    loginDropdown.classList.remove("show");
+  });
+}
+
 /* ============================================
    COUNTDOWN TIMER — resets to 6hrs on load
    ============================================ */

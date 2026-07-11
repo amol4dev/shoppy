@@ -343,14 +343,26 @@ document.getElementById("checkoutBtn").addEventListener("click", () => {
   const delivery = subtotal >= 499 || subtotal === 0 ? 0 : 49;
   const total = subtotal + delivery;
 
+  const draft = {
+    address: deliveryAddress.value.trim(),
+    phone: phoneNumber.value.trim(),
+    email: emailAddress.value.trim(),
+    paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value || "cod"
+  };
+
   localStorage.setItem("shoppy_checkout_summary", JSON.stringify({
     items: orderItems,
     subtotal,
     delivery,
-    total
+    total,
+    createdAt: new Date().toISOString()
   }));
+  localStorage.setItem("shoppy_checkout_draft", JSON.stringify(draft));
 
-  window.location.href = "payment.html";
+  showToast("Preparing your payment...");
+  setTimeout(() => {
+    window.location.href = "payment.html";
+  }, 250);
 });
 
 /* ============================================

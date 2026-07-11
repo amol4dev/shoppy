@@ -27,7 +27,15 @@
     .payment-option{ display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px solid rgba(27,27,47,0.10); border-radius:10px; background:#fff; }
     .actions{ display:flex; gap:10px; margin-top:14px; }
     .actions .btn{ flex:1; }
-    @media (max-width:760px){ .payment-body{ grid-template-columns:1fr; } }
+    .status-card{ margin-top:14px; padding:14px 16px; border-radius:12px; border:1px solid rgba(27,27,47,0.10); background:#f9f7fd; color:var(--ink); }
+    .status-card.success{ border-color:rgba(15,132,120,0.24); background:rgba(15,132,120,0.08); }
+    .status-card.error{ border-color:rgba(224,54,123,0.24); background:rgba(224,54,123,0.08); }
+    .status-card h4{ margin-bottom:6px; }
+    .empty-summary{ padding:12px 0; color:var(--ink-soft); }
+    .empty-summary .btn{ margin-top:10px; }
+    .field input.invalid, .field textarea.invalid{ border-color:#d24545; box-shadow:0 0 0 3px rgba(210,69,69,0.12); }
+    .btn:disabled{ opacity:0.7; cursor:not-allowed; transform:none; }
+    @media (max-width:760px){ .payment-body{ grid-template-columns:1fr; } .actions{ flex-direction:column; } }
   </style>
 </head>
 <body>
@@ -82,6 +90,7 @@
           <a href="index.html" class="btn btn-ghost">Back</a>
           <button class="btn btn-primary" id="placeOrderBtn" type="button">Place Order</button>
         </div>
+        <div id="orderStatus" class="status-card" hidden></div>
       </div>
     </div>
   </div>
@@ -92,27 +101,67 @@
     const summaryDelivery = document.getElementById('summaryDelivery');
     const summaryTotal = document.getElementById('summaryTotal');
     const paymentDetails = document.getElementById('paymentDetails');
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+    const orderStatus = document.getElementById('orderStatus');
+    const deliveryAddress = document.getElementById('deliveryAddress');
+    const phoneNumber = document.getElementById('phoneNumber');
+    const emailAddress = document.getElementById('emailAddress');
+    const paymentMethodInputs = document.querySelectorAll('input[name="paymentMethod"]');
 
     function money(value) {
       return '₹' + value.toLocaleString('en-IN');
     }
 
-    const summary = JSON.parse(localStorage.getItem('shoppy_checkout_summary') || '{}');
-    if (summary.items && summary.items.length) {
-      summaryItems.innerHTML = summary.items.map(item => `
-        <div class="summary-item">
-          <span>${item.name} × ${item.qty}</span>
-          <strong>${money(item.price * item.qty)}</strong>
-        </div>
-      `).join('');
-      summarySubtotal.textContent = money(summary.subtotal || 0);
-      summaryDelivery.textContent = summary.delivery === 0 ? 'Free' : money(summary.delivery || 0);
-      summaryTotal.textContent = money(summary.total || 0);
-    } else {
-      summaryItems.innerHTML = '<p>No items found.</p>';
+    function readSummary() {
+      return JSON.parse(localStorage.getItem('shoppy_checkout_summary') || '{}');
     }
 
-    function renderPaymentDetails(){
+    function renderSummary(summary) {
+      if (summary.items && summary.items.length) {
+        summaryItems.innerHTML = summary.items.map(item => `
+          <div class="summary-item">
+            <span>${item.name} × ${item.qty}</span>
+            <strong>${money(item.price * item.qty)}</strong>
+          </div>
+        `).join('');
+        summarySubtotal.textContent = money(summary.subtotal || 0);
+        summaryDelivery.textContent = summary.delivery === 0 ? 'Free' : money(summary.delivery || 0);
+        summaryTotal.textContent = money(summary.total || 0);
+      } else {
+        summaryItems.innerHTML = `
+          <div class="empty-summary">
+            <p>Your cart is empty, so there is nothing to pay for right now.</p>
+            <a href="index.html" class="btn btn-ghost">Continue shopping</a>
+          </div>
+        `;
+        summarySubtotal.textContent = money(0);
+        summaryDelivery.textContent = 'Free';
+        summaryTotal.textContent = money(0);
+      }
+    }
+
+    function applyCheckoutDraft() {
+      const draft = JSON.parse(localStorage.getItem('shoppy_checkout_draft') || '{}');
+      if (draft.address) deliveryAddress.value = draft.address;
+      if (draft.phone) phoneNumber.value = draft.phone;
+      if (draft.email) emailAddress.value = draft.email;
+      if (draft.paymentMethod) {
+        const selectedRadio = document.querySelector(`input[name="paymentMethod"][value="${draft.paymentMethod}"]`);
+        if (selectedRadio) selectedRadio.checked = true;
+      }
+    }
+
+    function showStatus(message, type = 'success') {
+      orderStatus.hidden = false;
+      orderStatus.className = `status-card ${type}`;
+      orderStatus.innerHTML = `<h4>${type === 'success' ? 'Order confirmed' : 'We need a bit more info'}</h4><p>${message}</p>`;
+    }
+
+    function markInvalid(input, valid) {
+      input.classList.toggle('invalid', !valid);
+    }
+
+    function renderPaymentDetails() {
       const selected = document.querySelector('input[name="paymentMethod"]:checked')?.value || 'cod';
       if (selected === 'upi') {
         paymentDetails.innerHTML = `
@@ -141,24 +190,30 @@
       }
     }
 
-    document.querySelectorAll('input[name="paymentMethod"]').forEach(r => r.addEventListener('change', renderPaymentDetails));
+    paymentMethodInputs.forEach(r => r.addEventListener('change', renderPaymentDetails));
+    renderSummary(readSummary());
+    applyCheckoutDraft();
     renderPaymentDetails();
 
-    document.getElementById('placeOrderBtn').addEventListener('click', () => {
-      const address = document.getElementById('deliveryAddress').value.trim();
-      const phone = document.getElementById('phoneNumber').value.trim();
-      const email = document.getElementById('emailAddress').value.trim();
+    placeOrderBtn.addEventListener('click', () => {
+      const address = deliveryAddress.value.trim();
+      const phone = phoneNumber.value.trim();
+      const email = emailAddress.value.trim();
+
+      markInvalid(deliveryAddress, Boolean(address));
+      markInvalid(phoneNumber, /^\d{10}$/.test(phone));
+      markInvalid(emailAddress, /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
 
       if (!address || !phone || !email) {
-        alert('Please complete your delivery details.');
+        showStatus('Please complete your delivery details before placing the order.', 'error');
         return;
       }
       if (!/^\d{10}$/.test(phone)) {
-        alert('Enter a valid 10-digit phone number.');
+        showStatus('Enter a valid 10-digit phone number to continue.', 'error');
         return;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        alert('Enter a valid email address.');
+        showStatus('Enter a valid email address so we can confirm your order.', 'error');
         return;
       }
 
@@ -166,7 +221,7 @@
       if (paymentMethod === 'upi') {
         const upiId = document.getElementById('upiId')?.value.trim();
         if (!upiId) {
-          alert('Please enter your UPI ID.');
+          showStatus('Please enter your UPI ID to complete the payment.', 'error');
           return;
         }
       }
@@ -175,14 +230,24 @@
         const cardName = document.getElementById('cardName')?.value.trim();
         const cardExpiry = document.getElementById('cardExpiry')?.value.trim();
         if (!cardNumber || !cardName || !cardExpiry) {
-          alert('Please complete your card details.');
+          showStatus('Please complete your card details before we place the order.', 'error');
           return;
         }
       }
 
-      localStorage.removeItem('shoppy_checkout_summary');
-      alert('Order placed successfully!');
-      window.location.href = 'index.html';
+      placeOrderBtn.disabled = true;
+      placeOrderBtn.textContent = 'Placing order...';
+      localStorage.setItem('shoppy_checkout_draft', JSON.stringify({ address, phone, email, paymentMethod }));
+
+      window.setTimeout(() => {
+        localStorage.removeItem('shoppy_checkout_summary');
+        localStorage.removeItem('shoppy_checkout_draft');
+        showStatus('Your order is confirmed. We will send a confirmation to your email shortly.', 'success');
+        placeOrderBtn.textContent = 'Order placed ✓';
+        window.setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1800);
+      }, 900);
     });
   </script>
 </body>

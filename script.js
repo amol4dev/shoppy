@@ -1,7 +1,7 @@
 /* ============================================
    SHOPPY — dummy product data
    ============================================ */
-const PRODUCTS = [
+const DEFAULT_PRODUCTS = [
   { id:1,  name:"Handloom Cotton Kurta Set",       cat:"Fashion",     price:899,  mrp:1799, rating:4.5, reviews:312, emoji:"👘", bg:"linear-gradient(135deg,#FDE9C8,#FBCFA0)", badge:"Bestseller" },
   { id:2,  name:"Denim Jacket — Unisex",            cat:"Fashion",     price:1499, mrp:2999, rating:4.3, reviews:184, emoji:"🧥", bg:"linear-gradient(135deg,#DCE7F5,#B9CDEB)" },
   { id:3,  name:"Ethnic Jhumka Earrings",           cat:"Fashion",     price:349,  mrp:699,  rating:4.7, reviews:521, emoji:"💫", bg:"linear-gradient(135deg,#FBD9E8,#F5B3D0)", badge:"Sale" },
@@ -26,7 +26,28 @@ const PRODUCTS = [
   { id:22, name:"Kids Illustrated Story Bundle",    cat:"Books",       price:449,  mrp:799,  rating:4.5, reviews:267, emoji:"🧸", bg:"linear-gradient(135deg,#F1E5FA,#DFC5F0)" },
 ];
 
-const CATEGORIES = ["All", "Fashion", "Electronics", "Home", "Beauty", "Sports", "Books"];
+const PRODUCT_STORAGE_KEY = "shoppy_products";
+
+function loadProducts(){
+  const saved = localStorage.getItem(PRODUCT_STORAGE_KEY);
+  if (!saved) {
+    localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(DEFAULT_PRODUCTS));
+    return DEFAULT_PRODUCTS;
+  }
+  try {
+    const parsed = JSON.parse(saved);
+    return Array.isArray(parsed) && parsed.length ? parsed : DEFAULT_PRODUCTS;
+  } catch {
+    return DEFAULT_PRODUCTS;
+  }
+}
+
+function saveProducts(products){
+  PRODUCTS = products;
+  localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(PRODUCTS));
+}
+
+let PRODUCTS = loadProducts();
 
 /* ============================================
    STATE  (persisted to localStorage)
@@ -36,6 +57,12 @@ let wishlist = new Set(JSON.parse(localStorage.getItem("shoppy_wishlist") || "[]
 let activeCategory = "All";
 let searchTerm = "";
 
+function getCategories(){
+  const categories = new Set(["All"]);
+  PRODUCTS.forEach(product => categories.add(product.cat));
+  return [...categories];
+}
+
 function saveState(){
   localStorage.setItem("shoppy_cart", JSON.stringify(cart));
   localStorage.setItem("shoppy_wishlist", JSON.stringify([...wishlist]));
@@ -44,19 +71,25 @@ function saveState(){
 /* ============================================
    RENDER: category chips
    ============================================ */
-const categoryNav = document.getElementById("categoryNav");
-CATEGORIES.forEach(cat => {
-  const chip = document.createElement("button");
-  chip.className = "chip" + (cat === activeCategory ? " active" : "");
-  chip.textContent = cat;
-  chip.dataset.cat = cat;
-  chip.addEventListener("click", () => {
-    activeCategory = cat;
-    document.querySelectorAll(".chip").forEach(c => c.classList.toggle("active", c.dataset.cat === cat));
-    renderProducts();
+function renderCategoryNav(){
+  const categoryNav = document.getElementById("categoryNav");
+  if (!categoryNav) return;
+  categoryNav.innerHTML = "";
+  getCategories().forEach(cat => {
+    const chip = document.createElement("button");
+    chip.className = "chip" + (cat === activeCategory ? " active" : "");
+    chip.textContent = cat;
+    chip.dataset.cat = cat;
+    chip.addEventListener("click", () => {
+      activeCategory = cat;
+      document.querySelectorAll(".chip").forEach(c => c.classList.toggle("active", c.dataset.cat === cat));
+      renderProducts();
+    });
+    categoryNav.appendChild(chip);
   });
-  categoryNav.appendChild(chip);
-});
+}
+
+renderCategoryNav();
 
 /* ============================================
    RENDER: product grid

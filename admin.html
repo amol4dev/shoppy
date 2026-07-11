@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shoppy Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body{ background:linear-gradient(135deg,#f6f4fb 0%,#ffffff 100%); }
+    .admin-shell{ max-width:1280px; margin:0 auto; padding:28px 24px 56px; }
+    .admin-card{ background:#fff; border:1px solid rgba(27,27,47,0.10); border-radius:24px; box-shadow:0 20px 40px -16px rgba(27,27,47,0.18); overflow:hidden; }
+    .admin-header{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:24px 28px; border-bottom:1px solid rgba(27,27,47,0.10); }
+    .admin-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+    .admin-grid{ display:grid; grid-template-columns:0.95fr 1.05fr; gap:24px; padding:24px 28px 28px; }
+    .panel{ background:var(--paper); border:1px solid rgba(27,27,47,0.10); border-radius:18px; padding:18px; }
+    .panel h3{ margin-bottom:12px; }
+    .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+    .field span{ font-size:0.78rem; font-weight:700; text-transform:uppercase; color:var(--ink-soft); letter-spacing:0.05em; }
+    .field input, .field select{ border:1px solid rgba(27,27,47,0.10); border-radius:10px; padding:10px 12px; font-size:0.95rem; }
+    .field input:focus, .field select:focus{ outline:2.5px solid var(--teal); border-color:transparent; }
+    .table-wrap{ overflow:auto; }
+    table{ width:100%; border-collapse:collapse; min-width:620px; }
+    th, td{ padding:10px 8px; border-bottom:1px solid rgba(27,27,47,0.10); text-align:left; font-size:0.9rem; }
+    th{ color:var(--ink-soft); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; }
+    .row-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+    .row-actions button{ padding:7px 10px; border-radius:999px; border:1px solid rgba(27,27,47,0.10); font-size:0.8rem; }
+    .row-actions .edit{ color:var(--teal-dark); }
+    .row-actions .delete{ color:var(--rani); }
+    .pill{ display:inline-flex; align-items:center; gap:4px; padding:6px 10px; border-radius:999px; background:#fff; border:1px solid rgba(27,27,47,0.10); font-size:0.8rem; }
+    .muted{ color:var(--ink-soft); }
+    @media (max-width:920px){ .admin-grid{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="admin-shell">
+    <div class="admin-card" id="loginCard">
+      <div class="admin-header">
+        <div>
+          <p class="eyebrow">Admin panel</p>
+          <h2>Admin login</h2>
+          <p class="muted">Use the simple demo credentials below to access the dashboard.</p>
+        </div>
+        <div class="admin-actions">
+          <a href="index.html" class="btn btn-ghost">← Back to shop</a>
+        </div>
+      </div>
+
+      <div class="admin-grid">
+        <div class="panel">
+          <h3>Sign in</h3>
+          <form id="loginForm">
+            <div class="field">
+              <span>Username</span>
+              <input id="adminUsername" required placeholder="admin" />
+            </div>
+            <div class="field">
+              <span>Password</span>
+              <input id="adminPassword" type="password" required placeholder="1234" />
+            </div>
+            <p class="muted">Default: username <strong>admin</strong> and password <strong>1234</strong></p>
+            <div class="admin-actions">
+              <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+          </form>
+        </div>
+        <div class="panel">
+          <h3>Quick access</h3>
+          <p class="muted">This is a demo admin page. Keep the credentials simple for local testing.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-card" id="dashboardCard" hidden>
+      <div class="admin-header">
+        <div>
+          <p class="eyebrow">Admin panel</p>
+          <h2>Manage products</h2>
+          <p class="muted">Create, edit, and remove products from the storefront.</p>
+        </div>
+        <div class="admin-actions">
+          <button type="button" id="logoutBtn" class="btn btn-ghost">Logout</button>
+          <a href="index.html" class="btn btn-ghost">← Back to shop</a>
+        </div>
+      </div>
+
+      <div class="admin-grid">
+        <div class="panel">
+          <h3 id="formTitle">Add a new product</h3>
+          <form id="productForm">
+            <input type="hidden" id="productId" />
+            <div class="field">
+              <span>Name</span>
+              <input id="productName" required placeholder="Product name" />
+            </div>
+            <div class="field">
+              <span>Category</span>
+              <select id="productCategory" required>
+                <option value="Fashion">Fashion</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Home">Home</option>
+                <option value="Beauty">Beauty</option>
+                <option value="Sports">Sports</option>
+                <option value="Books">Books</option>
+              </select>
+            </div>
+            <div class="field">
+              <span>Price</span>
+              <input id="productPrice" type="number" min="1" required placeholder="899" />
+            </div>
+            <div class="field">
+              <span>MRP</span>
+              <input id="productMrp" type="number" min="1" required placeholder="1799" />
+            </div>
+            <div class="field">
+              <span>Emoji</span>
+              <input id="productEmoji" maxlength="2" placeholder="👘" />
+            </div>
+            <div class="field">
+              <span>Badge</span>
+              <input id="productBadge" placeholder="Bestseller" />
+            </div>
+            <div class="field">
+              <span>Rating</span>
+              <input id="productRating" type="number" step="0.1" min="0" max="5" placeholder="4.5" />
+            </div>
+            <div class="field">
+              <span>Reviews</span>
+              <input id="productReviews" type="number" min="0" placeholder="312" />
+            </div>
+            <div class="admin-actions">
+              <button type="submit" class="btn btn-primary">Save product</button>
+              <button type="button" id="cancelEdit" class="btn btn-ghost">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <h3>Product list</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PRODUCT_STORAGE_KEY = 'shoppy_products';
+    const loginCard = document.getElementById('loginCard');
+    const dashboardCard = document.getElementById('dashboardCard');
+    const loginForm = document.getElementById('loginForm');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const form = document.getElementById('productForm');
+    const productIdField = document.getElementById('productId');
+    const formTitle = document.getElementById('formTitle');
+    const cancelEditBtn = document.getElementById('cancelEdit');
+    const tableBody = document.getElementById('productTableBody');
+
+    function loadProducts(){
+      const saved = localStorage.getItem(PRODUCT_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    }
+
+    function saveProducts(products){
+      localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(products));
+    }
+
+    function money(value){
+      return '₹' + Number(value).toLocaleString('en-IN');
+    }
+
+    function toggleDashboard(showDashboard){
+      loginCard.hidden = showDashboard;
+      dashboardCard.hidden = !showDashboard;
+    }
+
+    function checkLogin(){
+      const saved = sessionStorage.getItem('shoppy_admin_logged_in');
+      toggleDashboard(saved === 'true');
+    }
+
+    loginForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const username = document.getElementById('adminUsername').value.trim();
+      const password = document.getElementById('adminPassword').value;
+      if (username === 'admin' && password === '1234') {
+        sessionStorage.setItem('shoppy_admin_logged_in', 'true');
+        toggleDashboard(true);
+      } else {
+        alert('Wrong username or password. Try admin / 1234');
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('shoppy_admin_logged_in');
+      toggleDashboard(false);
+    });
+
+    function renderProducts(){
+      const products = loadProducts();
+      if (!products.length) {
+        tableBody.innerHTML = '<tr><td colspan="4" class="muted">No products yet. Add one above.</td></tr>';
+        return;
+      }
+      tableBody.innerHTML = products.map(product => `
+        <tr>
+          <td><strong>${product.name}</strong></td>
+          <td><span class="pill">${product.cat}</span></td>
+          <td>${money(product.price)}</td>
+          <td>
+            <div class="row-actions">
+              <button class="edit" data-id="${product.id}" type="button">Edit</button>
+              <button class="delete" data-id="${product.id}" type="button">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function resetForm(){
+      form.reset();
+      productIdField.value = '';
+      formTitle.textContent = 'Add a new product';
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const products = loadProducts();
+      const id = productIdField.value ? Number(productIdField.value) : Date.now();
+      const product = {
+        id,
+        name: document.getElementById('productName').value.trim(),
+        cat: document.getElementById('productCategory').value,
+        price: Number(document.getElementById('productPrice').value),
+        mrp: Number(document.getElementById('productMrp').value),
+        emoji: document.getElementById('productEmoji').value.trim() || '🛍️',
+        bg: 'linear-gradient(135deg,#F7E8D5,#EFC9A4)',
+        badge: document.getElementById('productBadge').value.trim() || '',
+        rating: Number(document.getElementById('productRating').value) || 4.3,
+        reviews: Number(document.getElementById('productReviews').value) || 0,
+      };
+
+      const existingIndex = products.findIndex(item => item.id === id);
+      if (existingIndex >= 0) {
+        products[existingIndex] = product;
+      } else {
+        products.unshift(product);
+      }
+
+      saveProducts(products);
+      renderProducts();
+      resetForm();
+      window.location.reload();
+    });
+
+    cancelEditBtn.addEventListener('click', resetForm);
+
+    tableBody.addEventListener('click', (event) => {
+      const deleteBtn = event.target.closest('.delete');
+      const editBtn = event.target.closest('.edit');
+      if (deleteBtn) {
+        const id = Number(deleteBtn.dataset.id);
+        const products = loadProducts().filter(product => product.id !== id);
+        saveProducts(products);
+        renderProducts();
+        return;
+      }
+      if (editBtn) {
+        const id = Number(editBtn.dataset.id);
+        const product = loadProducts().find(item => item.id === id);
+        if (!product) return;
+        productIdField.value = product.id;
+        document.getElementById('productName').value = product.name;
+        document.getElementById('productCategory').value = product.cat;
+        document.getElementById('productPrice').value = product.price;
+        document.getElementById('productMrp').value = product.mrp;
+        document.getElementById('productEmoji').value = product.emoji;
+        document.getElementById('productBadge').value = product.badge || '';
+        document.getElementById('productRating').value = product.rating;
+        document.getElementById('productReviews').value = product.reviews;
+        formTitle.textContent = 'Edit product';
+      }
+    });
+
+    checkLogin();
+    renderProducts();
+  </script>
+</body>
+</html>

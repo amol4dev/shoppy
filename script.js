@@ -24,6 +24,14 @@ const DEFAULT_PRODUCTS = [
   { id:20, name:"The Midnight Library — Novel",     cat:"Books",       price:249,  mrp:399,  rating:4.7, reviews:934, emoji:"📖", bg:"linear-gradient(135deg,#E3EAF7,#C4D4F0)", badge:"Bestseller" },
   { id:21, name:"Atomic Habits — Paperback",        cat:"Books",       price:299,  mrp:499,  rating:4.8, reviews:1520, emoji:"📚", bg:"linear-gradient(135deg,#FDEADD,#FAD0B4)" },
   { id:22, name:"Kids Illustrated Story Bundle",    cat:"Books",       price:449,  mrp:799,  rating:4.5, reviews:267, emoji:"🧸", bg:"linear-gradient(135deg,#F1E5FA,#DFC5F0)" },
+  { id:23, name:"Minimalist Leather Tote",          cat:"Fashion",     price:1699, mrp:2899, rating:4.6, reviews:214, emoji:"👜", bg:"linear-gradient(135deg,#F6E8CF,#E8D0A5)", badge:"New" },
+  { id:24, name:"Portable Mini Fan",                cat:"Electronics", price:649,  mrp:1099, rating:4.2, reviews:402, emoji:"🌀", bg:"linear-gradient(135deg,#DDEFFF,#C3DBF2)" },
+  { id:25, name:"Stainless Steel Water Bottle",    cat:"Home",        price:499,  mrp:899,  rating:4.4, reviews:321, emoji:"🧃", bg:"linear-gradient(135deg,#E5F3E5,#CBE4C0)" },
+  { id:26, name:"Rose Quartz Roller",               cat:"Beauty",      price:699,  mrp:1199, rating:4.5, reviews:289, emoji:"💎", bg:"linear-gradient(135deg,#FCE4EC,#F6BED1)", badge:"New" },
+  { id:27, name:"Resistance Bands Set",             cat:"Sports",      price:799,  mrp:1399, rating:4.3, reviews:185, emoji:"🪢", bg:"linear-gradient(135deg,#EDE7F8,#D7C7F0)" },
+  { id:28, name:"Urban Planner Notebook",           cat:"Books",       price:349,  mrp:599,  rating:4.6, reviews:196, emoji:"📓", bg:"linear-gradient(135deg,#FDEDDC,#F7D1B0)" },
+  { id:29, name:"Handcrafted Clay Mug",             cat:"Home",        price:399,  mrp:749,  rating:4.4, reviews:171, emoji:"☕", bg:"linear-gradient(135deg,#FAE2D4,#F1C8A2)" },
+  { id:30, name:"Wireless Charging Pad",            cat:"Electronics", price:1299, mrp:1999, rating:4.5, reviews:512, emoji:"🔌", bg:"linear-gradient(135deg,#E8F0F9,#C9DDF4)", badge:"Bestseller" },
 ];
 
 const PRODUCT_STORAGE_KEY = "shoppy_products";
@@ -36,8 +44,21 @@ function loadProducts(){
   }
   try {
     const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) && parsed.length ? parsed : DEFAULT_PRODUCTS;
+    if (Array.isArray(parsed) && parsed.length) {
+      const merged = [...parsed];
+      const existingIds = new Set(parsed.map(product => product.id));
+      DEFAULT_PRODUCTS.forEach(product => {
+        if (!existingIds.has(product.id)) merged.push(product);
+      });
+      if (merged.length !== parsed.length) {
+        localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(merged));
+      }
+      return merged;
+    }
+    localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(DEFAULT_PRODUCTS));
+    return DEFAULT_PRODUCTS;
   } catch {
+    localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(DEFAULT_PRODUCTS));
     return DEFAULT_PRODUCTS;
   }
 }

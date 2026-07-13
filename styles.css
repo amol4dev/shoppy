@@ -808,17 +808,27 @@ h1,h2,h3,h4{font-family:var(--font-display); font-weight:600; letter-spacing:-0.
   .hero-inner{ grid-template-columns:1fr; padding-top:40px; }
   .hero-visual{ height:280px; order:-1; }
   .header-top-right{ display:none; }
+  .header-top-inner{ flex-direction:column; align-items:flex-start; gap:4px; }
 }
 
 @media (max-width:640px){
+  .wrap{ padding:0 16px; }
+  .header-main{ padding:16px; gap:14px; }
+  .header-actions{ justify-content:flex-end; flex-wrap:wrap; }
   .product-grid{ grid-template-columns:repeat(2, 1fr); gap:14px; }
   .newsletter-inner{ flex-direction:column; align-items:flex-start; }
   #newsletterForm{ width:100%; }
   #newsletterForm input{ flex:1; min-width:0; }
   .countdown-unit{ min-width:64px; padding:12px 14px; }
+  .coupon-row{ flex-direction:column; }
+  .coupon-row .btn-sm{ width:100%; }
 }
 
 @media (max-width:420px){
   .product-grid{ grid-template-columns:1fr 1fr; }
   .cart-drawer{ width:100vw; }
+  .hero-copy h1{ font-size:2.15rem; }
+  .hero-visual{ height:220px; }
+  .hero-blob{ width:220px; height:220px; font-size:4.4rem; }
+  .tag-float{ font-size:0.78rem; padding:8px 12px; }
 }

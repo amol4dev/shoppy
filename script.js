@@ -75,8 +75,15 @@ let PRODUCTS = loadProducts();
    ============================================ */
 let cart = JSON.parse(localStorage.getItem("shoppy_cart") || "{}");
 let wishlist = new Set(JSON.parse(localStorage.getItem("shoppy_wishlist") || "[]"));
+let appliedCoupon = JSON.parse(localStorage.getItem("shoppy_coupon") || "null");
 let activeCategory = "All";
 let searchTerm = "";
+
+const COUPONS = {
+  SHOPPY10: 10,
+  INDIA20: 20,
+  MONSOON25: 25
+};
 
 function getCategories(){
   const categories = new Set(["All"]);
@@ -87,6 +94,7 @@ function getCategories(){
 function saveState(){
   localStorage.setItem("shoppy_cart", JSON.stringify(cart));
   localStorage.setItem("shoppy_wishlist", JSON.stringify([...wishlist]));
+  localStorage.setItem("shoppy_coupon", JSON.stringify(appliedCoupon));
 }
 
 /* ============================================
@@ -194,7 +202,14 @@ const cartCount = document.getElementById("cartCount");
 const cartItemsEl = document.getElementById("cartItems");
 const cartSubtotal = document.getElementById("cartSubtotal");
 const cartDelivery = document.getElementById("cartDelivery");
+const cartDiscountRow = document.getElementById("cartDiscountRow");
+const cartDiscountLabel = document.getElementById("cartDiscountLabel");
+const cartDiscount = document.getElementById("cartDiscount");
 const cartTotal = document.getElementById("cartTotal");
+const couponInput = document.getElementById("couponInput");
+const applyCouponBtn = document.getElementById("applyCouponBtn");
+const removeCouponBtn = document.getElementById("removeCouponBtn");
+const couponHint = document.getElementById("couponHint");
 const checkoutForm = document.getElementById("checkoutForm");
 const deliveryAddress = document.getElementById("deliveryAddress");
 const phoneNumber = document.getElementById("phoneNumber");
@@ -221,6 +236,40 @@ function changeQty(id, delta){
   updateCartUI();
 }
 
+function applyCoupon(){
+  const code = couponInput.value.trim().toUpperCase();
+  if (!code){
+    showToast("Enter a coupon code.");
+    return;
+  }
+  const discount = COUPONS[code];
+  if (!discount){
+    showToast("Invalid coupon code.");
+    return;
+  }
+  appliedCoupon = { code, value: discount };
+  saveState();
+  updateCartUI();
+  showToast(`Coupon applied: ${code} (${discount}% off)`);
+}
+
+function removeCoupon(){
+  if (!appliedCoupon) return;
+  appliedCoupon = null;
+  saveState();
+  updateCartUI();
+  showToast("Coupon removed.");
+}
+
+function updateCouponPanel(subtotal){
+  couponHint.textContent = appliedCoupon
+    ? `Coupon ${appliedCoupon.code} applied.`
+    : "Admin-generated coupons are available here.";
+  couponInput.value = appliedCoupon ? appliedCoupon.code : "";
+  removeCouponBtn.hidden = !appliedCoupon;
+  applyCouponBtn.disabled = subtotal === 0;
+}
+
 function updateCartUI(){
   const ids = Object.keys(cart).map(Number);
   const totalItems = ids.reduce((sum, id) => sum + cart[id], 0);
@@ -230,7 +279,9 @@ function updateCartUI(){
     cartItemsEl.innerHTML = `<p class="cart-empty">Your cart is empty.<br>Time to go bazaar-hopping 🛍️</p>`;
     cartSubtotal.textContent = money(0);
     cartDelivery.textContent = money(0);
+    cartDiscountRow.hidden = true;
     cartTotal.textContent = money(0);
+    updateCouponPanel(0);
     return;
   }
 
@@ -256,10 +307,21 @@ function updateCartUI(){
     `;
   }).join("");
 
-  const delivery = subtotal >= 499 || subtotal === 0 ? 0 : 49;
+  const delivery = subtotal >= 499 ? 0 : 49;
+  const discountValue = appliedCoupon ? Math.min(Math.round(subtotal * appliedCoupon.value / 100), subtotal) : 0;
+  const total = Math.max(0, subtotal + delivery - discountValue);
+
   cartSubtotal.textContent = money(subtotal);
   cartDelivery.textContent = delivery === 0 ? "Free" : money(delivery);
-  cartTotal.textContent = money(subtotal + delivery);
+  if (discountValue > 0){
+    cartDiscountRow.hidden = false;
+    cartDiscountLabel.textContent = `${appliedCoupon.code} (${appliedCoupon.value}%)`;
+    cartDiscount.textContent = `- ${money(discountValue)}`;
+  } else {
+    cartDiscountRow.hidden = true;
+  }
+  cartTotal.textContent = money(total);
+  updateCouponPanel(subtotal);
 
   cartItemsEl.querySelectorAll(".qty-control button").forEach(btn => {
     btn.addEventListener("click", () => changeQty(Number(btn.dataset.id), Number(btn.dataset.delta)));
@@ -272,6 +334,15 @@ function updateCartUI(){
     });
   });
 }
+
+applyCouponBtn.addEventListener("click", applyCoupon);
+removeCouponBtn.addEventListener("click", removeCoupon);
+couponInput.addEventListener("keydown", event => {
+  if (event.key === "Enter"){
+    event.preventDefault();
+    applyCoupon();
+  }
+});
 
 /* ============================================
    CART DRAWER open/close
@@ -395,13 +466,16 @@ document.getElementById("checkoutBtn").addEventListener("click", () => {
 
   const subtotal = orderItems.reduce((sum, item) => sum + item.price * item.qty, 0);
   const delivery = subtotal >= 499 || subtotal === 0 ? 0 : 49;
-  const total = subtotal + delivery;
+  const discount = appliedCoupon ? Math.min(Math.round(subtotal * appliedCoupon.value / 100), subtotal) : 0;
+  const total = subtotal + delivery - discount;
 
   const draft = {
     address: deliveryAddress.value.trim(),
     phone: phoneNumber.value.trim(),
     email: emailAddress.value.trim(),
-    paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value || "cod"
+    paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value || "cod",
+    coupon: appliedCoupon ? appliedCoupon.code : null,
+    discount
   };
 
   localStorage.setItem("shoppy_checkout_summary", JSON.stringify({

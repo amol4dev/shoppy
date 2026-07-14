@@ -349,14 +349,22 @@ couponInput.addEventListener("keydown", event => {
    ============================================ */
 const cartDrawer = document.getElementById("cartDrawer");
 const overlay = document.getElementById("overlay");
+let previousBodyOverflow = "";
+let previousHtmlOverflow = "";
 
 function openCart(){
+  previousBodyOverflow = document.body.style.overflow;
+  previousHtmlOverflow = document.documentElement.style.overflow;
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
   cartDrawer.classList.add("open");
   overlay.classList.add("show");
 }
 function closeCartFn(){
   cartDrawer.classList.remove("open");
   overlay.classList.remove("show");
+  document.body.style.overflow = previousBodyOverflow || "";
+  document.documentElement.style.overflow = previousHtmlOverflow || "";
 }
 document.getElementById("cartBtn").addEventListener("click", openCart);
 document.getElementById("closeCart").addEventListener("click", closeCartFn);

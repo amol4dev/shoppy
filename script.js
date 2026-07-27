@@ -366,7 +366,15 @@ function closeCartFn(){
   document.body.style.overflow = previousBodyOverflow || "";
   document.documentElement.style.overflow = previousHtmlOverflow || "";
 }
-document.getElementById("cartBtn").addEventListener("click", openCart);
+document.getElementById("cartBtn").addEventListener("click", () => {
+  if (window.location.href.includes("cart.html")) {
+    // if already on cart page, keep legacy drawer behavior
+    openCart();
+  } else {
+    // navigate to dedicated cart page
+    window.location.href = "cart.html";
+  }
+});
 document.getElementById("closeCart").addEventListener("click", closeCartFn);
 overlay.addEventListener("click", closeCartFn);
 

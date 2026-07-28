@@ -32,6 +32,12 @@ const DEFAULT_PRODUCTS = [
   { id:28, name:"Urban Planner Notebook",           cat:"Books",       price:349,  mrp:599,  rating:4.6, reviews:196, emoji:"📓", bg:"linear-gradient(135deg,#FDEDDC,#F7D1B0)" },
   { id:29, name:"Handcrafted Clay Mug",             cat:"Home",        price:399,  mrp:749,  rating:4.4, reviews:171, emoji:"☕", bg:"linear-gradient(135deg,#FAE2D4,#F1C8A2)" },
   { id:30, name:"Wireless Charging Pad",            cat:"Electronics", price:1299, mrp:1999, rating:4.5, reviews:512, emoji:"🔌", bg:"linear-gradient(135deg,#E8F0F9,#C9DDF4)", badge:"Bestseller" },
+  { id:31, name:"Premium Silk Scarf",                cat:"Fashion",     price:1299, mrp:2499, rating:4.6, reviews:278, emoji:"🧣", bg:"linear-gradient(135deg,#FDE9E8,#FBCFC0)" },
+  { id:32, name:"USB-C Hub 7-in-1",                  cat:"Electronics", price:1599, mrp:2799, rating:4.4, reviews:356, emoji:"🖲️", bg:"linear-gradient(135deg,#E5F1F8,#C7DFF2)" },
+  { id:33, name:"Decorative Wall Mirror",            cat:"Home",        price:1299, mrp:2199, rating:4.5, reviews:193, emoji:"🪞", bg:"linear-gradient(135deg,#F3E6F9,#E3D0F0)" },
+  { id:34, name:"Organic Coconut Oil",               cat:"Beauty",      price:399,  mrp:799,  rating:4.7, reviews:654, emoji:"🥥", bg:"linear-gradient(135deg,#FFF2D6,#FFE9B0)" },
+  { id:35, name:"Resistance Loop Bands",             cat:"Sports",      price:499,  mrp:899,  rating:4.3, reviews:267, emoji:"🔗", bg:"linear-gradient(135deg,#E9F0F7,#D1DFF0)" },
+  { id:36, name:"Art of Living — Self-Help Guide",   cat:"Books",       price:325,  mrp:599,  rating:4.6, reviews:423, emoji:"📕", bg:"linear-gradient(135deg,#F6EBD6,#ECDB98)" },
 ];
 
 const PRODUCT_STORAGE_KEY = "shoppy_products";

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Details — Shoppy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.product-info-container { max-width: 1200px; margin: 2rem auto; padding: 2rem; }
+.product-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+.product-image { width: 100%; aspect-ratio: 1; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 8rem; }
+.product-details h1 { font-size: 2rem; margin-bottom: 1rem; font-family: "Space Grotesk", sans-serif; }
+.product-meta { display: flex; gap: 2rem; margin: 1.5rem 0; }
+.meta-item strong { display: block; font-size: 0.85rem; color: #888; margin-bottom: 0.25rem; }
+.meta-item { font-size: 1.5rem; font-weight: 600; }
+.price-section { display: flex; gap: 1rem; align-items: center; margin: 2rem 0; }
+.price-now { font-size: 2rem; font-weight: 700; color: #000; }
+.price-was { font-size: 1.2rem; color: #999; text-decoration: line-through; }
+.price-off { padding: 0.5rem 1rem; background: #ff6b6b; color: white; border-radius: 6px; font-weight: 600; font-size: 0.9rem; }
+.product-actions { display: flex; gap: 1rem; margin: 2rem 0; }
+.product-actions button { flex: 1; }
+.product-actions .wish-btn { flex: 0; }
+
+.tabs-container { margin: 3rem 0; border-bottom: 2px solid #f0f0f0; }
+.tabs { display: flex; gap: 2rem; margin-bottom: -2px; }
+.tab-btn { padding: 1rem; border: none; background: none; cursor: pointer; font-size: 1rem; font-weight: 600; border-bottom: 2px solid transparent; color: #888; transition: all 0.2s; }
+.tab-btn.active { color: #000; border-bottom-color: #000; }
+.tab-content { display: none; padding: 2rem 0; }
+.tab-content.active { display: block; }
+
+.reviews-list { display: flex; flex-direction: column; gap: 1.5rem; }
+.review-item { border: 1px solid #f0f0f0; padding: 1.5rem; border-radius: 8px; }
+.review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.review-name { font-weight: 600; }
+.review-date { font-size: 0.85rem; color: #888; }
+.review-rating { color: #ffa500; font-weight: 600; }
+.review-text { color: #555; line-height: 1.6; }
+
+.specifications { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.spec-item { padding: 1rem; background: #f9f9f9; border-radius: 8px; }
+.spec-label { font-size: 0.85rem; color: #888; font-weight: 600; }
+.spec-value { font-size: 1rem; font-weight: 600; margin-top: 0.5rem; }
+
+.delivery-info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
+.delivery-card { padding: 1.5rem; background: #f9f9f9; border-radius: 8px; text-align: center; }
+.delivery-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.delivery-text { font-size: 0.9rem; color: #555; }
+
+@media (max-width: 768px) {
+  .product-hero { grid-template-columns: 1fr; }
+  .specs { grid-template-columns: 1fr; }
+  .delivery-info { grid-template-columns: 1fr; }
+  .tabs { gap: 1rem; }
+  .tab-btn { padding: 0.75rem; font-size: 0.9rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header" id="siteHeader">
+  <div class="header-top">
+    <div class="wrap header-top-inner">
+      <p>Free delivery across India on orders above ₹499</p>
+      <p class="header-top-right">Track Order · Help Center</p>
+    </div>
+  </div>
+  <div class="wrap header-main">
+    <a href="index.html" class="logo">Shoppy<span class="logo-dot">.</span></a>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search for kurtas, earbuds, cookware...">
+      <button aria-label="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="header-actions">
+      <div class="login-menu">
+        <button class="icon-btn login-trigger" id="loginTrigger" aria-label="Login">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="login-dropdown" id="loginDropdown">
+          <a href="customer-login.html" class="login-option">Login as Customer</a>
+          <a href="admin.html" class="login-option">Login as Admin</a>
+        </div>
+      </div>
+      <button class="icon-btn" id="wishlistBtn" aria-label="Wishlist">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 6 4c2.2-.3 3.9 1 6 3 2.1-2 3.8-3.3 6-3 4 .5 5.6 4.2 4 7.7C19.5 16.4 12 21 12 21z" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span class="badge" id="wishlistCount">0</span>
+      </button>
+      <button class="icon-btn" id="cartBtn" aria-label="Cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.4a2 2 0 002 1.6h8.4a2 2 0 002-1.6L21 8H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="18" cy="21" r="1.4" fill="currentColor"/></svg>
+        <span class="badge" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ PRODUCT INFO ============ -->
+<section class="product-info-container">
+  <a href="index.html" style="color: #888; text-decoration: none; margin-bottom: 1rem; display: inline-block;">← Back to Shoppy</a>
+  
+  <div class="product-hero">
+    <div class="product-image" id="productImage"></div>
+    <div class="product-details">
+      <p class="eyebrow" id="productCategory"></p>
+      <h1 id="productName"></h1>
+      
+      <div class="product-meta">
+        <div class="meta-item">
+          <strong>Rating</strong>
+          <span id="productRating">⭐ 4.5 (312 reviews)</span>
+        </div>
+        <div class="meta-item">
+          <strong>In Stock</strong>
+          <span style="color: #2ecc71;">✓ Available</span>
+        </div>
+      </div>
+
+      <div class="price-section">
+        <span class="price-now" id="productPrice">₹899</span>
+        <span class="price-was" id="productMRP">₹1,799</span>
+        <span class="price-off" id="productDiscount">50% off</span>
+      </div>
+
+      <div class="product-actions">
+        <button class="btn btn-primary add-to-cart" id="addToCartBtn">Add to Cart</button>
+        <button class="btn btn-ghost wish-btn" id="productWishBtn" style="flex: 0; width: 50px; padding: 0;">♡</button>
+      </div>
+
+      <div class="delivery-info">
+        <div class="delivery-card">
+          <div class="delivery-icon">🚚</div>
+          <div class="delivery-text"><strong>Free Delivery</strong><br>Within 24-48 hrs</div>
+        </div>
+        <div class="delivery-card">
+          <div class="delivery-icon">↩️</div>
+          <div class="delivery-text"><strong>Easy Returns</strong><br>7 days return policy</div>
+        </div>
+        <div class="delivery-card">
+          <div class="delivery-icon">🔒</div>
+          <div class="delivery-text"><strong>Secure Payment</strong><br>All methods supported</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TABS ============ -->
+  <div class="tabs-container">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="description">Description</button>
+      <button class="tab-btn" data-tab="specs">Specifications</button>
+      <button class="tab-btn" data-tab="reviews">Reviews</button>
+    </div>
+
+    <div id="description" class="tab-content active">
+      <p id="productDescription"></p>
+    </div>
+
+    <div id="specs" class="tab-content">
+      <div class="specifications" id="productSpecs"></div>
+    </div>
+
+    <div id="reviews" class="tab-content">
+      <div class="reviews-list" id="reviewsList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <p class="logo">Shoppy<span class="logo-dot">.</span></p>
+      <p>India's most fun way to shop online. Built with ❤️ and lots of chai.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <ul><li>Fashion</li><li>Electronics</li><li>Home &amp; Living</li><li>Beauty</li></ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul><li>About Shoppy</li><li>Careers</li><li>Press</li><li>Contact</li></ul>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <ul><li>Track Order</li><li>Returns</li><li>Shipping Info</li><li>FAQs</li></ul>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <p>© 2026 Shoppy Retail Pvt. Ltd. This is a demo project for portfolio purposes.</p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+<script>
+// ============ PRODUCT INFO PAGE LOGIC ============
+const DUMMY_REVIEWS = [
+  { name: "Priya Sharma", date: "2 days ago", rating: 5, text: "Absolutely love this! Quality is amazing and delivery was super fast. Already recommended to my friends." },
+  { name: "Amit Kumar", date: "1 week ago", rating: 4, text: "Good product, meets expectations. Packaging could be better but overall satisfied." },
+  { name: "Sneha Desai", date: "2 weeks ago", rating: 5, text: "Best purchase ever! The value for money is incredible. Will definitely buy again." },
+  { name: "Rajesh Patel", date: "3 weeks ago", rating: 4, text: "Pretty good quality. Arrived in perfect condition. Highly recommend." },
+  { name: "Meera Singh", date: "1 month ago", rating: 5, text: "Worth every penny! Customer service was also very helpful when I had questions." }
+];
+
+const DUMMY_DESCRIPTIONS = {
+  default: "Premium quality product crafted with attention to detail. This item is designed to last and provide excellent value for your money. Perfect for everyday use or special occasions. Trusted by thousands of satisfied customers across India.",
+};
+
+const DUMMY_SPECS = {
+  default: [
+    { label: "Material", value: "Premium Quality" },
+    { label: "Warranty", value: "1 Year" },
+    { label: "Color", value: "As shown in image" },
+    { label: "Shipping Weight", value: "Standard" },
+  ]
+};
+
+function initProductPage() {
+  const params = new URLSearchParams(window.location.search);
+  const productId = parseInt(params.get('id'));
+  
+  if (!productId) {
+    document.body.innerHTML = '<div class="wrap" style="padding: 4rem 0; text-align: center;"><h1>Product not found</h1><a href="index.html" class="btn btn-primary">Back to Shoppy</a></div>';
+    return;
+  }
+
+  const product = PRODUCTS.find(p => p.id === productId);
+  if (!product) {
+    document.body.innerHTML = '<div class="wrap" style="padding: 4rem 0; text-align: center;"><h1>Product not found</h1><a href="index.html" class="btn btn-primary">Back to Shoppy</a></div>';
+    return;
+  }
+
+  // Populate product details
+  document.getElementById('productImage').textContent = product.emoji;
+  document.getElementById('productImage').style.background = product.bg;
+  document.getElementById('productCategory').textContent = product.cat;
+  document.getElementById('productName').textContent = product.name;
+  document.getElementById('productRating').textContent = `⭐ ${product.rating} (${product.reviews.toLocaleString("en-IN")} reviews)`;
+  document.getElementById('productPrice').textContent = `₹${product.price.toLocaleString("en-IN")}`;
+  document.getElementById('productMRP').textContent = `₹${product.mrp.toLocaleString("en-IN")}`;
+  
+  const discount = Math.round(100 - (product.price / product.mrp) * 100);
+  document.getElementById('productDiscount').textContent = `${discount}% off`;
+
+  document.getElementById('productDescription').textContent = DUMMY_DESCRIPTIONS.default;
+
+  // Populate specifications
+  const specsHTML = DUMMY_SPECS.default.map(spec => `
+    <div class="spec-item">
+      <div class="spec-label">${spec.label}</div>
+      <div class="spec-value">${spec.value}</div>
+    </div>
+  `).join('');
+  document.getElementById('productSpecs').innerHTML = specsHTML;
+
+  // Populate reviews
+  const reviewsHTML = DUMMY_REVIEWS.map(review => `
+    <div class="review-item">
+      <div class="review-header">
+        <span class="review-name">${review.name}</span>
+        <span class="review-date">${review.date}</span>
+      </div>
+      <div class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)} ${review.rating}/5</div>
+      <div class="review-text">${review.text}</div>
+    </div>
+  `).join('');
+  document.getElementById('reviewsList').innerHTML = reviewsHTML;
+
+  // Add to cart button
+  document.getElementById('addToCartBtn').addEventListener('click', () => {
+    addToCart(product.id, document.getElementById('addToCartBtn'));
+  });
+
+  // Wishlist button
+  const wishBtn = document.getElementById('productWishBtn');
+  function updateWishBtnUI() {
+    if (wishlist.has(product.id)) {
+      wishBtn.textContent = '♥';
+      wishBtn.classList.add('active');
+    } else {
+      wishBtn.textContent = '♡';
+      wishBtn.classList.remove('active');
+    }
+  }
+  updateWishBtnUI();
+  wishBtn.addEventListener('click', () => {
+    toggleWishlist(product.id, wishBtn);
+    updateWishBtnUI();
+  });
+
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabName = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(tabName).classList.add('active');
+    });
+  });
+
+  // Update cart and wishlist counts
+  updateCartCount();
+  updateWishlistCount();
+}
+
+function updateCartCount() {
+  const total = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+  document.getElementById('cartCount').textContent = total;
+}
+
+function updateWishlistCount() {
+  document.getElementById('wishlistCount').textContent = wishlist.size;
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', initProductPage);
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  searchTerm = e.target.value.trim();
+  // Redirect to home with search
+  if (searchTerm) {
+    window.location.href = `index.html?search=${encodeURIComponent(searchTerm)}`;
+  }
+});
+</script>
+</body>
+</html>

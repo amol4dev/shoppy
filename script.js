@@ -152,7 +152,7 @@ function renderProducts(){
     const card = document.createElement("article");
     card.className = "product-card";
     card.innerHTML = `
-      <div class="product-media" style="background:${p.bg}">
+      <div class="product-media" style="background:${p.bg}; cursor:pointer;">
         ${p.badge ? `<span class="product-badge ${p.badge === "Sale" ? "sale" : p.badge === "New" ? "new" : ""}">${p.badge}</span>` : ""}
         <button class="wish-btn ${wishlist.has(p.id) ? "active" : ""}" data-id="${p.id}" aria-label="Toggle wishlist">${wishlist.has(p.id) ? "♥" : "♡"}</button>
         <span>${p.emoji}</span>
@@ -170,6 +170,14 @@ function renderProducts(){
       </div>
     `;
     productGrid.appendChild(card);
+  });
+
+  productGrid.querySelectorAll(".product-media").forEach(media => {
+    media.addEventListener("click", (e) => {
+      if (e.target.closest(".wish-btn")) return;
+      const productId = media.parentElement.querySelector(".add-btn").dataset.id;
+      window.location.href = `product-info.html?id=${productId}`;
+    });
   });
 
   productGrid.querySelectorAll(".add-btn").forEach(btn => {
@@ -570,5 +578,14 @@ setInterval(tickCountdown, 1000);
    INIT
    ============================================ */
 wishlistCount.textContent = wishlist.size;
+
+// Handle URL search parameters
+const params = new URLSearchParams(window.location.search);
+const urlSearch = params.get('search');
+if (urlSearch) {
+  searchTerm = decodeURIComponent(urlSearch);
+  document.getElementById("searchInput").value = searchTerm;
+}
+
 renderProducts();
 updateCartUI();

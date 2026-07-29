@@ -392,6 +392,17 @@ document.getElementById("cartBtn").addEventListener("click", () => {
 document.getElementById("closeCart").addEventListener("click", closeCartFn);
 overlay.addEventListener("click", closeCartFn);
 
+const backToTopBtn = document.getElementById("backToTop");
+function updateBackToTop(){
+  if (!backToTopBtn) return;
+  backToTopBtn.classList.toggle("visible", window.scrollY > 400);
+}
+backToTopBtn?.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+window.addEventListener("scroll", updateBackToTop);
+window.addEventListener("load", updateBackToTop);
+
 function renderPaymentDetails(){
   const selected = document.querySelector('input[name="paymentMethod"]:checked')?.value || "cod";
 

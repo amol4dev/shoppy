@@ -21,37 +21,46 @@
   <div class="wrap header-main">
     <a href="#" class="logo">Shoppy<span class="logo-dot">.</span></a>
 
+    <nav class="category-nav" id="categoryNav" aria-label="Main navigation"></nav>
+
+    <div class="spacer"></div>
+
+    <div class="search-compact">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="search-icon"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input type="text" id="searchInput" placeholder="Search products..." aria-label="Search products">
+    </div>
+
     <div class="header-actions">
+      <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu" hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+
       <div class="login-menu">
         <button class="icon-btn login-trigger" id="loginTrigger" aria-label="Login">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="login-dropdown" id="loginDropdown">
           <a href="customer-login.html" class="login-option">Login as Customer</a>
           <a href="admin.html" class="login-option">Login as Admin</a>
         </div>
       </div>
+
       <button class="icon-btn" id="wishlistBtn" aria-label="Wishlist">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 6 4c2.2-.3 3.9 1 6 3 2.1-2 3.8-3.3 6-3 4 .5 5.6 4.2 4 7.7C19.5 16.4 12 21 12 21z" stroke="currentColor" stroke-width="1.8"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 6 4c2.2-.3 3.9 1 6 3 2.1-2 3.8-3.3 6-3 4 .5 5.6 4.2 4 7.7C19.5 16.4 12 21 12 21z" stroke="currentColor" stroke-width="1.8"/></svg>
         <span class="badge" id="wishlistCount">0</span>
       </button>
       <button class="icon-btn" id="cartBtn" aria-label="Cart">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.4a2 2 0 002 1.6h8.4a2 2 0 002-1.6L21 8H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="18" cy="21" r="1.4" fill="currentColor"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.4a2 2 0 002 1.6h8.4a2 2 0 002-1.6L21 8H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="18" cy="21" r="1.4" fill="currentColor"/></svg>
         <span class="badge" id="cartCount">0</span>
-      </button>
-    </div>
-
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Search for kurtas, earbuds, cookware...">
-      <button aria-label="Search">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
     </div>
   </div>
 
-  <nav class="wrap category-nav" id="categoryNav">
-    <!-- filled by JS -->
-  </nav>
+  <!-- Mobile navigation drawer (injected by JS) -->
+  <div id="mobileNav" class="mobile-nav" aria-hidden="true">
+    <button class="mobile-close" id="mobileNavClose" aria-label="Close menu">✕</button>
+    <div class="mobile-nav-inner" id="mobileNavInner"></div>
+  </div>
 </header>
 
 <!-- ============ HERO ============ -->

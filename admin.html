@@ -8,27 +8,27 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <style>
-    body{ background:linear-gradient(135deg,#f6f4fb 0%,#ffffff 100%); }
+    body{ background:linear-gradient(135deg,var(--paper) 0%,#ffffff 100%); }
     .admin-shell{ max-width:1280px; margin:0 auto; padding:28px 24px 56px; }
-    .admin-card{ background:#fff; border:1px solid rgba(27,27,47,0.10); border-radius:24px; box-shadow:0 20px 40px -16px rgba(27,27,47,0.18); overflow:hidden; }
-    .admin-header{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:24px 28px; border-bottom:1px solid rgba(27,27,47,0.10); }
+    .admin-card{ background:var(--card); border:1px solid var(--line); border-radius:24px; box-shadow:var(--shadow-card); overflow:hidden; }
+    .admin-header{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:24px 28px; border-bottom:1px solid var(--line); }
     .admin-actions{ display:flex; gap:10px; flex-wrap:wrap; }
     .admin-grid{ display:grid; grid-template-columns:0.95fr 1.05fr; gap:24px; padding:24px 28px 28px; }
-    .panel{ background:var(--paper); border:1px solid rgba(27,27,47,0.10); border-radius:18px; padding:18px; }
+    .panel{ background:var(--paper); border:1px solid var(--line); border-radius:18px; padding:18px; }
     .panel h3{ margin-bottom:12px; }
     .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
     .field span{ font-size:0.78rem; font-weight:700; text-transform:uppercase; color:var(--ink-soft); letter-spacing:0.05em; }
-    .field input, .field select{ border:1px solid rgba(27,27,47,0.10); border-radius:10px; padding:10px 12px; font-size:0.95rem; }
-    .field input:focus, .field select:focus{ outline:2.5px solid var(--teal); border-color:transparent; }
+    .field input, .field select{ border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:0.95rem; background:var(--card); }
+    .field input:focus, .field select:focus{ outline:2.5px solid var(--accent); border-color:transparent; }
     .table-wrap{ overflow:auto; }
     table{ width:100%; border-collapse:collapse; min-width:620px; }
-    th, td{ padding:10px 8px; border-bottom:1px solid rgba(27,27,47,0.10); text-align:left; font-size:0.9rem; }
+    th, td{ padding:10px 8px; border-bottom:1px solid var(--line); text-align:left; font-size:0.9rem; }
     th{ color:var(--ink-soft); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; }
     .row-actions{ display:flex; gap:8px; flex-wrap:wrap; }
-    .row-actions button{ padding:7px 10px; border-radius:999px; border:1px solid rgba(27,27,47,0.10); font-size:0.8rem; }
-    .row-actions .edit{ color:var(--teal-dark); }
-    .row-actions .delete{ color:var(--rani); }
-    .pill{ display:inline-flex; align-items:center; gap:4px; padding:6px 10px; border-radius:999px; background:#fff; border:1px solid rgba(27,27,47,0.10); font-size:0.8rem; }
+    .row-actions button{ padding:7px 10px; border-radius:999px; border:1px solid var(--line); font-size:0.8rem; }
+    .row-actions .edit{ color:var(--accent-strong); }
+    .row-actions .delete{ color:var(--accent); }
+    .pill{ display:inline-flex; align-items:center; gap:4px; padding:6px 10px; border-radius:999px; background:var(--card); border:1px solid var(--line); font-size:0.8rem; }
     .muted{ color:var(--ink-soft); }
     .coupon-list-wrap{ margin-top:14px; }
     @media (max-width:920px){ .admin-grid{ grid-template-columns:1fr; } }

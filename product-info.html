@@ -13,40 +13,40 @@
 .product-image { width: 100%; aspect-ratio: 1; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 8rem; }
 .product-details h1 { font-size: 2rem; margin-bottom: 1rem; font-family: "Space Grotesk", sans-serif; }
 .product-meta { display: flex; gap: 2rem; margin: 1.5rem 0; }
-.meta-item strong { display: block; font-size: 0.85rem; color: #888; margin-bottom: 0.25rem; }
+.meta-item strong { display: block; font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.25rem; }
 .meta-item { font-size: 1.5rem; font-weight: 600; }
 .price-section { display: flex; gap: 1rem; align-items: center; margin: 2rem 0; }
-.price-now { font-size: 2rem; font-weight: 700; color: #000; }
-.price-was { font-size: 1.2rem; color: #999; text-decoration: line-through; }
-.price-off { padding: 0.5rem 1rem; background: #ff6b6b; color: white; border-radius: 6px; font-weight: 600; font-size: 0.9rem; }
+.price-now { font-size: 2rem; font-weight: 700; color: var(--ink); }
+.price-was { font-size: 1.2rem; color: var(--ink-soft); text-decoration: line-through; }
+.price-off { padding: 0.5rem 1rem; background: var(--accent); color: var(--paper); border-radius: 6px; font-weight: 600; font-size: 0.9rem; }
 .product-actions { display: flex; gap: 1rem; margin: 2rem 0; }
 .product-actions button { flex: 1; }
 .product-actions .wish-btn { flex: 0; }
 
-.tabs-container { margin: 3rem 0; border-bottom: 2px solid #f0f0f0; }
+.tabs-container { margin: 3rem 0; border-bottom: 2px solid var(--line); }
 .tabs { display: flex; gap: 2rem; margin-bottom: -2px; }
-.tab-btn { padding: 1rem; border: none; background: none; cursor: pointer; font-size: 1rem; font-weight: 600; border-bottom: 2px solid transparent; color: #888; transition: all 0.2s; }
-.tab-btn.active { color: #000; border-bottom-color: #000; }
+.tab-btn { padding: 1rem; border: none; background: none; cursor: pointer; font-size: 1rem; font-weight: 600; border-bottom: 2px solid transparent; color: var(--ink-soft); transition: all 0.2s; }
+.tab-btn.active { color: var(--ink); border-bottom-color: var(--accent); }
 .tab-content { display: none; padding: 2rem 0; }
 .tab-content.active { display: block; }
 
 .reviews-list { display: flex; flex-direction: column; gap: 1.5rem; }
-.review-item { border: 1px solid #f0f0f0; padding: 1.5rem; border-radius: 8px; }
+.review-item { border: 1px solid var(--line); padding: 1.5rem; border-radius: 8px; background: var(--card); }
 .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
 .review-name { font-weight: 600; }
-.review-date { font-size: 0.85rem; color: #888; }
-.review-rating { color: #ffa500; font-weight: 600; }
-.review-text { color: #555; line-height: 1.6; }
+.review-date { font-size: 0.85rem; color: var(--ink-soft); }
+.review-rating { color: var(--accent); font-weight: 600; }
+.review-text { color: var(--ink-soft); line-height: 1.6; }
 
 .specifications { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.spec-item { padding: 1rem; background: #f9f9f9; border-radius: 8px; }
-.spec-label { font-size: 0.85rem; color: #888; font-weight: 600; }
+.spec-item { padding: 1rem; background: var(--surface); border-radius: 8px; }
+.spec-label { font-size: 0.85rem; color: var(--ink-soft); font-weight: 600; }
 .spec-value { font-size: 1rem; font-weight: 600; margin-top: 0.5rem; }
 
 .delivery-info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
-.delivery-card { padding: 1.5rem; background: #f9f9f9; border-radius: 8px; text-align: center; }
+.delivery-card { padding: 1.5rem; background: var(--surface); border-radius: 8px; text-align: center; }
 .delivery-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-.delivery-text { font-size: 0.9rem; color: #555; }
+.delivery-text { font-size: 0.9rem; color: var(--ink-soft); }
 
 @media (max-width: 768px) {
   .product-hero { grid-template-columns: 1fr; }
@@ -99,7 +99,7 @@
 
 <!-- ============ PRODUCT INFO ============ -->
 <section class="product-info-container">
-  <a href="index.html" style="color: #888; text-decoration: none; margin-bottom: 1rem; display: inline-block;">← Back to Shoppy</a>
+  <a href="index.html" style="color: var(--ink-soft); text-decoration: none; margin-bottom: 1rem; display: inline-block;">← Back to Shoppy</a>
   
   <div class="product-hero">
     <div class="product-image" id="productImage"></div>
@@ -114,7 +114,7 @@
         </div>
         <div class="meta-item">
           <strong>In Stock</strong>
-          <span style="color: #2ecc71;">✓ Available</span>
+          <span style="color: var(--accent-strong);">✓ Available</span>
         </div>
       </div>
 

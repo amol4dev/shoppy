@@ -152,7 +152,7 @@ function renderProducts(){
     const card = document.createElement("article");
     card.className = "product-card";
     card.innerHTML = `
-      <div class="product-media" style="background:${p.bg}; cursor:pointer;">
+      <div class="product-media" style="background:linear-gradient(135deg, var(--surface) 0%, var(--paper) 100%); cursor:pointer;">
         ${p.badge ? `<span class="product-badge ${p.badge === "Sale" ? "sale" : p.badge === "New" ? "new" : ""}">${p.badge}</span>` : ""}
         <button class="wish-btn ${wishlist.has(p.id) ? "active" : ""}" data-id="${p.id}" aria-label="Toggle wishlist">${wishlist.has(p.id) ? "♥" : "♡"}</button>
         <span>${p.emoji}</span>
